@@ -1,11 +1,14 @@
 % layout 'default';
 % title 'Mimir - Leaf';
+
 <h2></h2>
+
 <p><%= $content %><p>
+
 <ul>
 % foreach my $tag (@$tags) {
     <li><%= $tag %></li>
 % }
 </ul>
-<button type="button" class="btn btn-primary">Add Tag</button>
 
+%= include 'add-tag-model', leaf_id => $leaf_id

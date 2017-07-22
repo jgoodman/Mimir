@@ -1,7 +1,11 @@
 % layout 'default';
 % title 'Mimir - Node';
+
 <h2><%= $title %></h2>
+
 % foreach my $leaf (@$leaves) {
     <p><a href="/leaf/<%= $leaf->{'leaf_id'} %>"><%= $leaf->{'content'} %></a></p>
 % }
-<button type="button" class="btn btn-primary">Add Leaf</button>
+
+%= include 'add-leaf-model', node_id => $node_id
+

@@ -44,6 +44,22 @@ sub node_view {
     );
 }
 
+sub leaf_add {
+    my $self = shift;
+    my %args = @_;
+
+    my $leaf_rs = $self->schema->resultset('Leaf')->create({
+        node_id => $args{node_id},
+        content => $args{content},
+    });
+
+    return(
+        leaf_id => $leaf_rs->leaf_id,
+        content => $leaf_rs->content,
+        tags    => [ ],
+    );
+}
+
 sub leaf_view {
     my $self = shift;
 
@@ -67,7 +83,6 @@ sub tag_view {
     my $id_or_name  = shift;
 
     my $field  = ($id_or_name =~ m/^\d+$/) ? 'tag_id' : 'name';
-
     my $tag_rs = $self->schema->resultset('Tag')->single({$field => $id_or_name});
 
     my @leaves;
@@ -82,5 +97,25 @@ sub tag_view {
         leaves  => \@leaves,
     );
 }
+
+sub tag_add {
+    my $self = shift;
+    my %args = @_;
+
+    my $tag_rs = $self->schema->resultset('Tag')->find_or_create({
+        name => $args{'name'},
+    });
+
+    my $tag_leaf_rs = $self->schema->resultset('TagLeaf')->find_or_create({
+        tag_id  => $tag_rs->tag_id,
+        leaf_id => $args{leaf_id},
+    });
+
+    return(
+        leaf_id => $tag_leaf_rs->leaf_id,
+        tag_id  => $tag_leaf_rs->tag_id,
+    );
+}
+
 
 1;

@@ -4,77 +4,12 @@
     <title><%= title %></title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <link rel="stylesheet" href="/components/bootstrap/dist/css/bootstrap.min.css"/>
-    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+    <link rel="stylesheet" type="text/css" href="/main.css" />
 
-    <style>
-        body {
-            font-family: Open Sans;
-            background-color: #787252;
-        }
-
-        /* Remove the navbar's default margin-bottom and rounded borders */ 
-        .navbar {
-            margin-bottom: 0;
-            border-radius: 0;
-		  	border-color:  #4b684b;
-            background:    #7a9f7a;
-        }
-
-        .navbar-inverse .navbar-nav>li>a {
-		    color: #000000;
-        }
-
-        .navbar-inverse .navbar-nav>.active>a,
-        .navbar-inverse .navbar-nav>.active>a:focus,
-        .navbar-inverse .navbar-nav>.active>a:hover {
-            background: #787252;
-		  	border-color:  #594040;
-        }
-
-		a {
-		    color: #000000;
-		}        
-
-        div.row.content {
-            background-color: #D5DED9;
-        }
-
-        /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
-        .row.content {
-        }
-        
-        .sidenav {
-            height: 100%;
-            padding-top: 20px;
-            background-color: #D5DED9;
-        }
-
-        .col-sm-8.text-left {
-            padding: 1em;
-            background: white;
-            min-height: 450px;
-        }
-        
-        /* Set black background color, white text and some padding */
-        footer {
-            background:   #787252;
-            color:        white;
-            padding:      15px;
-		  	border-color: #5b5740;
-        }
-        
-        /* On small screens, set height to 'auto' for sidenav and grid */
-        @media screen and (max-width: 767px) {
-            .sidenav {
-                height: auto;
-                padding: 15px;
-            }
-            .row.content {
-                height:auto;
-            } 
-        }
-    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 
 <body>
@@ -91,9 +26,9 @@
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav">
                 <li class="active"><a href="#">Home</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Projects</a></li>
-                <li><a href="#">Contact</a></li>
+                <li><a href="#">Stem1</a></li>
+                <li><a href="#">Stem2</a></li>
+                <li><a href="#">Stem3</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
@@ -105,20 +40,14 @@
 <div class="container-fluid text-center">    
     <div class="row content">
         <div class="col-sm-2 sidenav">
-            <p><a href="#">Link</a></p>
-            <p><a href="#">Link</a></p>
-            <p><a href="#">Link</a></p>
+            <p><a href="#">Branch</a></p>
+            <p><a href="#">Branch</a></p>
+            <p><a href="#">Branch</a></p>
         </div>
         <div class="col-sm-8 text-left"> 
             <%= content %>
         </div>
         <div class="col-sm-2 sidenav">
-            <div class="well">
-                <p>ADS</p>
-            </div>
-            <div class="well">
-                <p>ADS</p>
-            </div>
         </div>
     </div>
 </div>

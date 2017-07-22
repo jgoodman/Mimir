@@ -6,5 +6,8 @@
     % foreach my $leaf (@{$node->{'leaves'}}) {
         <p><a href="/leaf/<%= $leaf->{'leaf_id'} %>"><%= $leaf->{'content'} %></a></p>
     % }
+
+    %= include 'add-leaf-model', node_id => $node->{'node_id'}
+
+    <hr>
 % }
-<button type="button" class="btn btn-primary">Add Leaf</button>

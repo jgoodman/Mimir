@@ -8,4 +8,16 @@ sub view {
     );
 }
 
+sub add {
+    my $self = shift;
+
+    my $node_id = $self->param('node_id');
+    $self->model->leaf_add(
+        node_id => $node_id,
+        content => $self->param('content'),
+    );
+
+    $self->redirect_to("/node/$node_id");
+}
+
 1;
