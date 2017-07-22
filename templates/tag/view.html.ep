@@ -1,0 +1,6 @@
+% layout 'default';
+% title 'Mimir - Node';
+<h2><%= $name %></h2>
+% foreach my $leaf (@$leaves) {
+    <p><a href="/leaf/<%= $leaf->{'leaf_id'} %>"><%= $leaf->{'content'} %></a></p>
+% }

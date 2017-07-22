@@ -1,0 +1,6 @@
+*.swp
+*.swo
+dbicdh/
+local/
+mimir.conf
+*.db

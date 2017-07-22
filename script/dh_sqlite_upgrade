@@ -1,0 +1,29 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+use aliased 'DBIx::Class::DeploymentHandler' => 'DH';
+use Getopt::Long;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Mimir::Schema;
+
+my $f = 1;
+my $t = 2;
+
+GetOptions(
+    'from=i' => \$f,
+    'to=i'   => \$t,
+);
+
+my $s = Mimir::Schema->connect('dbi:SQLite:' . ($ENV{TEST_DB} || 'test.db'));
+my $dh = DH->new({
+    schema              => $s,
+    script_directory    => "$FindBin::Bin/../dbicdh",
+    databases           => 'SQLite',
+    sql_translator_args => { add_drop_table => 0 },
+});
+
+$dh->prepare_deploy;
+$dh->prepare_upgrade({ from_version => $f, to_version => $t });
+$dh->upgrade;
