@@ -5,10 +5,11 @@
 
 <p><%= $content %><p>
 
-<ul>
+<hr>
+<div style="color:grey; font-size:smaller; padding: 0em 0em .5em 0em; margin: 0em 0em .5em 0em; ">
 % foreach my $tag (@$tags) {
-    <li><%= $tag %></li>
+    <span style="font-size:smaller; margin: 0em .25em 0em 0em;"><%= $tag %></span>
 % }
-</ul>
+</div>
 
-%= include 'add-tag-model', leaf_id => $leaf_id
+%= include 'modals/add-tag', leaf_id => $leaf_id

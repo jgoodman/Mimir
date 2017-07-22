@@ -15,8 +15,8 @@
             <div class="modal-body">
                 <form method="POST" action="/leaf/<%= $leaf_id %>/tag">
                     <div class="form-group">
-                        <label for="name">Name:</label>
-                        <input class="form-control" rows="5" id="name" name="name"></input>
+                        <label for="addTagModal-name">Name:</label>
+                        <input class="form-control" id="addTagModal-name" name="name"></input>
                     </div>
                     <input type="submit" class="btn btn-default" value="Submit">
                 </form>

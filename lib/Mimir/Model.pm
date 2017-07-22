@@ -24,6 +24,30 @@ sub branch_view {
     );
 }
 
+sub node_add {
+    my $self = shift;
+    my %args = @_;
+
+    my $branch_id = $args{branch_id};
+    my $weight    = $self->schema
+                         ->resultset('Node')
+                         ->search({branch_id => $branch_id})
+                         ->get_column('weight')
+                         ->max;
+
+    my $node_rs = $self->schema->resultset('Node')->create({
+        branch_id => $branch_id,
+        title     => $args{title},
+        weight    => ++$weight,
+    });
+
+    return(
+        node_id => $node_rs->node_id,
+        title   => $node_rs->title,
+        leaves  => [ ],
+    );
+}
+
 sub node_view {
     my $self = shift;
     my $node_rs = $self->schema->resultset('Node')->single({node_id => shift});
@@ -48,9 +72,17 @@ sub leaf_add {
     my $self = shift;
     my %args = @_;
 
+    my $node_id = $args{node_id};
+    my $weight  = $self->schema
+                       ->resultset('Leaf')
+                       ->search({node_id => $node_id})
+                       ->get_column('weight')
+                       ->max;
+
     my $leaf_rs = $self->schema->resultset('Leaf')->create({
-        node_id => $args{node_id},
+        node_id => $node_id,
         content => $args{content},
+        weight  => ++$weight,
     });
 
     return(

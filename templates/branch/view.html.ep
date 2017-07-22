@@ -7,7 +7,9 @@
         <p><a href="/leaf/<%= $leaf->{'leaf_id'} %>"><%= $leaf->{'content'} %></a></p>
     % }
 
-    %= include 'add-leaf-model', node_id => $node->{'node_id'}
+    %= include 'modals/add-leaf', node_id => $node->{'node_id'}
 
     <hr>
 % }
+
+%= include 'modals/add-node', branch_id => $branch_id
