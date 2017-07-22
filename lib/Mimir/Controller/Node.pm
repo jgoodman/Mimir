@@ -20,4 +20,16 @@ sub add {
     $self->redirect_to("/branch/$branch_id");
 }
 
+sub update_order {
+    my $self = shift;
+
+    my $success = $self->model->node_update_order(
+        node_id   => $self->param('node_id'),
+        old_index => $self->param('old_index'),
+        new_index => $self->param('new_index'),
+    );
+
+    $self->render(json => { success => $success });
+}
+
 1;

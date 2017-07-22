@@ -68,6 +68,50 @@ sub node_view {
     );
 }
 
+sub node_update_order {
+    my $self = shift;
+    my %args = @_;
+
+    my $node_id    = $args{node_id}   // die 'no node_id';
+    my $old_index  = $args{old_index} // die 'no old_index';
+    my $new_index  = $args{new_index} // die 'no new_index';
+
+    my $leaf_rs = _get_leaf_by_weight($self, $old_index, $node_id) || die 'Unable to locate leaf';
+
+    my $guard = $self->schema->txn_scope_guard;
+
+    my $i = $new_index;
+    if($new_index > $old_index) {
+        # ascending
+        while($i > $old_index) {
+            my $sib_leaf_rs = _get_leaf_by_weight($self, $i--, $node_id) || next;
+            $sib_leaf_rs->update({weight => $i});
+        }
+    }
+    else {
+        # descending
+        while($i < $old_index) {
+            my $sib_leaf_rs = _get_leaf_by_weight($self, $i++, $node_id) || next;
+            $sib_leaf_rs->update({weight => $i});
+        }
+
+    }
+
+    $leaf_rs->update({weight => $new_index});
+
+    $guard->commit;
+
+    return 1;
+}
+
+sub _get_leaf_by_weight {
+    my ($self, $weight, $node_id) = @_;
+    $self->schema->resultset('Leaf')->single({
+        node_id => $node_id,
+        weight  => $weight,
+    });
+}
+
 sub leaf_add {
     my $self = shift;
     my %args = @_;

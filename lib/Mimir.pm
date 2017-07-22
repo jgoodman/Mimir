@@ -22,6 +22,8 @@ sub startup {
     $r->post("/branch/:branch_id/node")->to("node#add");
     $r->post("/node/:node_id/leaf")->to("leaf#add");
     $r->post("/leaf/:leaf_id/tag")->to("tag#add");
+
+    $r->put("/api/node/:node_id/order")->to("node#update_order");
 }
 
 1;

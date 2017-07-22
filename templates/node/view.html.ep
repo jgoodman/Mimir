@@ -1,11 +1,37 @@
 % layout 'default';
 % title 'Mimir - Node';
 
+<script src="/components/Sortable/Sortable.min.js"></script>
 <h2><%= $title %></h2>
 
+
+% my $i = 0;
+
+<div id="listWithHandle" class="list-group">
 % foreach my $leaf (@$leaves) {
-    <p><a href="/leaf/<%= $leaf->{'leaf_id'} %>"><%= $leaf->{'content'} %></a></p>
+% $i++;
+    <div class="list-group-item" style="border: none">
+        <a href="/leaf/<%= $leaf->{'leaf_id'} %>"><%= $leaf->{'content'} %></a>
+    </div>
 % }
+</div>
 
 %= include 'modals/add-leaf', node_id => $node_id
 
+
+<script>
+var sortable2 = Sortable.create(listWithHandle, {
+    animation: 150,
+    onEnd: function (evt) {
+        $.ajax({
+            data: {
+                "node_id":<%= $node_id %>,
+                "old_index":evt.oldIndex,
+                "new_index":evt.newIndex
+            },
+            type: 'PUT',
+            url: '/api/node/<%= $node_id %>/order'
+        });
+    },
+});
+</script>
