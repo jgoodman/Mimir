@@ -24,6 +24,9 @@
             <img src="/logo.png" height="50">
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+            </ul>
             <ul class="nav navbar-nav">
                 % foreach my $stem (@{$nav->{'stems'}}) {
                 % if($stem->{'active'}) {
@@ -34,9 +37,6 @@
                     <a href="/stem/<%= $stem->{'stem_id'} %>"><%= $stem->{'title'} %></a>
                 </li>
                 % }
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
             </ul>
         </div>
     </div>
