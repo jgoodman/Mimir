@@ -25,6 +25,15 @@ sub startup {
     $r->post("/leaf/:leaf_id/tag")->to("tag#add");
 
     $r->put("/api/node/:node_id/order")->to("node#update_order");
+
+
+    # Hooks
+    $app->hook(before_dispatch => sub {
+        my $c = shift;
+        my $path = $c->req->url->path->to_abs_string;
+        my ($class, $id) = $path =~ m{^/(\w+)/(\d+)};
+        $c->stash(nav => $c->model->nav($class, $id));
+    });
 }
 
 1;

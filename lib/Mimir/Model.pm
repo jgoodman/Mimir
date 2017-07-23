@@ -7,9 +7,32 @@ has schema => sub {
     return Mimir::Schema->connect('dbi:SQLite:' . ($ENV{MOJO_MODE} || 'test') . '.db');
 };
 
-sub _get_nav {
-    my $self = shift;
-    my $stem = shift;
+sub nav {
+    my $self  = shift;
+    my $field = shift;
+    my $id    = shift;
+
+
+    my $active_stem_rs;
+    my $active_branch_rs;
+    if($id) {
+        my $res = $self->schema->resultset(ucfirst($field))->single({"$field\_id" => $id});
+        if($field eq 'stem') {
+            $active_stem_rs   = $res;
+        }
+        elsif($field eq 'branch') {
+            $active_stem_rs   = $res->stem;
+            $active_branch_rs = $res;
+        }
+        elsif($field eq 'node') {
+            $active_stem_rs   = $res->branch->stem;
+            $active_branch_rs = $res->branch;
+        }
+        elsif($field eq 'leaf') {
+            $active_stem_rs   = $res->node->branch->stem;
+            $active_branch_rs = $res->node->branch;
+        }
+    }
 
     my @stems;
     my $stems_rs = $self->schema->resultset('Stem')->search();
@@ -17,19 +40,27 @@ sub _get_nav {
         push @stems, {
             stem_id => $stem_rs->stem_id,
             title   => $stem_rs->title,
-            active  => ($stem && $stem->id == $stem_rs->stem_id) ? 1 : 0,
+            active  => ($active_stem_rs && $active_stem_rs->stem_id == $stem_rs->stem_id) ? 1 : 0,
         };
     }
 
     my @branches;
-    if($stem) {
-        my $branches_rs = $stem->branches;
+    if($active_stem_rs) {
+        my $branches_rs = $active_stem_rs->branches;
         while (my $branch_rs = $branches_rs->next) {
-            push @branches, { branch_id => $branch_rs->branch_id, title => $branch_rs->title };
+            push @branches, {
+                branch_id => $branch_rs->branch_id,
+                title     => $branch_rs->title,
+                active    => ($active_branch_rs && $active_branch_rs->branch_id == $branch_rs->branch_id) ? 1 : 0,
+            };
         }
     }
 
-    return { stems => \@stems, branches => \@branches };
+    return {
+        stems    => \@stems,
+        branches => \@branches,
+        ($active_stem_rs ? (stem_id  => $active_stem_rs->stem_id) : ())
+    };
 }
 
 sub stem_list {
@@ -42,16 +73,13 @@ sub stem_list {
     }
 
     return(
-        nav   => $self->_get_nav(),
         stems => \@stems,
     );
 }
 
 sub stem_view {
     my $self = shift;
-    return(
-        nav => $self->_get_nav($self->schema->resultset('Stem')->single({stem_id => shift}))
-    );
+    return();
 }
 
 sub stem_add {
@@ -62,9 +90,7 @@ sub stem_add {
         title => $args{title},
     });
 
-    return(
-        nav => $self->_get_nav($stem_rs),
-    );
+    return();
 }
 
 sub branch_add {
@@ -85,7 +111,6 @@ sub branch_add {
     });
 
     return(
-        nav       => $self->_get_nav($branch_rs->stem),
         branch_id => $branch_rs->branch_id,
         title     => $branch_rs->title,
         nodes     => [ ],
@@ -104,8 +129,6 @@ sub branch_view {
 
     my $branch_id = $branch_rs->branch_id;
     return(
-        nav          => $self->_get_nav($branch_rs->stem),
-        stem_id      => $branch_rs->stem->stem_id,
         branch_id    => $branch_id,
         title        => $branch_rs->title,
         nodes        => \@nodes,
@@ -130,8 +153,6 @@ sub node_add {
     });
 
     return(
-        nav     => $self->_get_nav($node_rs->branch->stem),
-        stem_id => $node_rs->branch->stem->stem_id,
         node_id => $node_rs->node_id,
         title   => $node_rs->title,
         leaves  => [ ],
@@ -152,8 +173,6 @@ sub node_view {
     }
 
     return(
-        nav     => $self->_get_nav($node_rs->branch->stem),
-        stem_id => $node_rs->branch->stem->stem_id,
         node_id => $node_rs->node_id,
         title   => $node_rs->title,
         leaves  => \@leaves,
@@ -222,8 +241,6 @@ sub leaf_add {
     });
 
     return(
-        nav     => $self->_get_nav($leaf_rs->node->branch->stem),
-        stem_id => $leaf_rs->node->branch->stem->stem_id,
         leaf_id => $leaf_rs->leaf_id,
         content => $leaf_rs->content,
         tags    => [ ],
@@ -242,8 +259,6 @@ sub leaf_view {
     }
 
     return(
-        nav     => $self->_get_nav($leaf_rs->node->branch->stem),
-        stem_id => $leaf_rs->node->branch->stem->stem_id,
         leaf_id => $leaf_rs->leaf_id,
         content => $leaf_rs->content,
         tags    => \@tag_names,
@@ -264,7 +279,6 @@ sub tag_view {
     }
 
     return(
-        nav     => $self->_get_nav,
         tag_id  => $tag_rs->tag_id,
         name    => $tag_rs->name,
         leaves  => \@leaves,
@@ -285,7 +299,6 @@ sub tag_add {
     });
 
     return(
-        nav     => $self->_get_nav,
         leaf_id => $tag_leaf_rs->leaf_id,
         tag_id  => $tag_leaf_rs->tag_id,
     );

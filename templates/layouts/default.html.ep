@@ -48,8 +48,8 @@
             % foreach my $branch (@{$nav->{'branches'}}) {
             <p><a href="/branch/<%= $branch->{'branch_id'} %>"><%= $branch->{'title'} %></a></p>
             % }
-            % if ( exists stash->{ stem_id } ) {
-            %= include 'modals/add-branch', stem_id => $stem_id
+            % if ( exists stash->{nav}->{stem_id} ) {
+            %= include 'modals/add-branch', stem_id => $nav->{stem_id}
             % }
         </div>
         <div class="col-sm-8 text-left"> 
