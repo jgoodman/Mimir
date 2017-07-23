@@ -8,4 +8,15 @@ sub view {
     );
 }
 
+sub add {
+    my $self = shift;
+
+    my %hash = $self->model->branch_add(
+        stem_id => $self->param('stem_id'),
+        title   => $self->param('title'),
+    );
+
+    $self->redirect_to('/branch/'.$hash{'branch_id'});
+}
+
 1;

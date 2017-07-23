@@ -67,6 +67,31 @@ sub stem_add {
     );
 }
 
+sub branch_add {
+    my $self = shift;
+    my %args = @_;
+
+    my $stem_id = $args{stem_id};
+    my $weight  = $self->schema
+                       ->resultset('Branch')
+                       ->search({stem_id => $stem_id})
+                       ->get_column('weight')
+                       ->max;
+
+    my $branch_rs = $self->schema->resultset('Branch')->create({
+        stem_id => $stem_id,
+        title   => $args{title},
+        weight  => ++$weight,
+    });
+
+    return(
+        nav       => $self->_get_nav($branch_rs->stem),
+        branch_id => $branch_rs->branch_id,
+        title     => $branch_rs->title,
+        nodes     => [ ],
+    );
+}
+
 sub branch_view {
     my $self = shift;
     my $branch_rs = $self->schema->resultset('Branch')->single({branch_id => shift});
@@ -80,6 +105,7 @@ sub branch_view {
     my $branch_id = $branch_rs->branch_id;
     return(
         nav          => $self->_get_nav($branch_rs->stem),
+        stem_id      => $branch_rs->stem->stem_id,
         branch_id    => $branch_id,
         title        => $branch_rs->title,
         nodes        => \@nodes,
@@ -105,6 +131,7 @@ sub node_add {
 
     return(
         nav     => $self->_get_nav($node_rs->branch->stem),
+        stem_id => $node_rs->branch->stem->stem_id,
         node_id => $node_rs->node_id,
         title   => $node_rs->title,
         leaves  => [ ],
@@ -126,6 +153,7 @@ sub node_view {
 
     return(
         nav     => $self->_get_nav($node_rs->branch->stem),
+        stem_id => $node_rs->branch->stem->stem_id,
         node_id => $node_rs->node_id,
         title   => $node_rs->title,
         leaves  => \@leaves,
@@ -195,6 +223,7 @@ sub leaf_add {
 
     return(
         nav     => $self->_get_nav($leaf_rs->node->branch->stem),
+        stem_id => $leaf_rs->node->branch->stem->stem_id,
         leaf_id => $leaf_rs->leaf_id,
         content => $leaf_rs->content,
         tags    => [ ],
@@ -214,6 +243,7 @@ sub leaf_view {
 
     return(
         nav     => $self->_get_nav($leaf_rs->node->branch->stem),
+        stem_id => $leaf_rs->node->branch->stem->stem_id,
         leaf_id => $leaf_rs->leaf_id,
         content => $leaf_rs->content,
         tags    => \@tag_names,
