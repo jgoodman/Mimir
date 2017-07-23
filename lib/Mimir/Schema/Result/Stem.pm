@@ -14,6 +14,6 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key('stem_id');
 
-__PACKAGE__->has_many('branches', 'Mimir::Schema::Result::Branch', 'stem_id', { order_by => { -asc => [qw/weight node_id/]} });
+__PACKAGE__->has_many('branches', 'Mimir::Schema::Result::Branch', 'stem_id', { order_by => { -asc => [qw/weight branch_id/]} });
 
 1;

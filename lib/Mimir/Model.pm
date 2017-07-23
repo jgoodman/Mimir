@@ -7,6 +7,66 @@ has schema => sub {
     return Mimir::Schema->connect('dbi:SQLite:' . ($ENV{MOJO_MODE} || 'test') . '.db');
 };
 
+sub _get_nav {
+    my $self = shift;
+    my $stem = shift;
+
+    my @stems;
+    my $stems_rs = $self->schema->resultset('Stem')->search();
+    while (my $stem_rs = $stems_rs->next) {
+        push @stems, {
+            stem_id => $stem_rs->stem_id,
+            title   => $stem_rs->title,
+            active  => ($stem && $stem->id == $stem_rs->stem_id) ? 1 : 0,
+        };
+    }
+
+    my @branches;
+    if($stem) {
+        my $branches_rs = $stem->branches;
+        while (my $branch_rs = $branches_rs->next) {
+            push @branches, { branch_id => $branch_rs->branch_id, title => $branch_rs->title };
+        }
+    }
+
+    return { stems => \@stems, branches => \@branches };
+}
+
+sub stem_list {
+    my $self = shift;
+
+    my @stems;
+    my $stems_rs = $self->schema->resultset('Stem')->search();
+    while (my $stem_rs = $stems_rs->next) {
+        push @stems, { stem_id => $stem_rs->stem_id, title => $stem_rs->title };
+    }
+
+    return(
+        nav   => $self->_get_nav(),
+        stems => \@stems,
+    );
+}
+
+sub stem_view {
+    my $self = shift;
+    return(
+        nav => $self->_get_nav($self->schema->resultset('Stem')->single({stem_id => shift}))
+    );
+}
+
+sub stem_add {
+    my $self = shift;
+    my %args = @_;
+
+    my $stem_rs = $self->schema->resultset('Stem')->create({
+        title => $args{title},
+    });
+
+    return(
+        nav => $self->_get_nav($stem_rs),
+    );
+}
+
 sub branch_view {
     my $self = shift;
     my $branch_rs = $self->schema->resultset('Branch')->single({branch_id => shift});
@@ -17,10 +77,12 @@ sub branch_view {
         push @nodes, { $self->node_view($node_rs->node_id) };
     }
 
+    my $branch_id = $branch_rs->branch_id;
     return(
-        branch_id => $branch_rs->branch_id,
-        title     => $branch_rs->title,
-        nodes     => \@nodes,
+        nav          => $self->_get_nav($branch_rs->stem),
+        branch_id    => $branch_id,
+        title        => $branch_rs->title,
+        nodes        => \@nodes,
     );
 }
 
@@ -42,6 +104,7 @@ sub node_add {
     });
 
     return(
+        nav     => $self->_get_nav($node_rs->branch->stem),
         node_id => $node_rs->node_id,
         title   => $node_rs->title,
         leaves  => [ ],
@@ -62,6 +125,7 @@ sub node_view {
     }
 
     return(
+        nav     => $self->_get_nav($node_rs->branch->stem),
         node_id => $node_rs->node_id,
         title   => $node_rs->title,
         leaves  => \@leaves,
@@ -130,6 +194,7 @@ sub leaf_add {
     });
 
     return(
+        nav     => $self->_get_nav($leaf_rs->node->branch->stem),
         leaf_id => $leaf_rs->leaf_id,
         content => $leaf_rs->content,
         tags    => [ ],
@@ -148,6 +213,7 @@ sub leaf_view {
     }
 
     return(
+        nav     => $self->_get_nav($leaf_rs->node->branch->stem),
         leaf_id => $leaf_rs->leaf_id,
         content => $leaf_rs->content,
         tags    => \@tag_names,
@@ -168,6 +234,7 @@ sub tag_view {
     }
 
     return(
+        nav     => $self->_get_nav,
         tag_id  => $tag_rs->tag_id,
         name    => $tag_rs->name,
         leaves  => \@leaves,
@@ -188,6 +255,7 @@ sub tag_add {
     });
 
     return(
+        nav     => $self->_get_nav,
         leaf_id => $tag_leaf_rs->leaf_id,
         tag_id  => $tag_leaf_rs->tag_id,
     );

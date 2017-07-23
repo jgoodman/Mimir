@@ -14,7 +14,7 @@ unless ( GetOptions( 'force_overwrite!' => \$force_overwrite ) ) {
     die "Invalid options";
 }
 
-my $s = Mimir::Schema->connect('dbi:SQLite:' . ($ENV{TEST_DB} || 'test.db'));
+my $s = Mimir::Schema->connect('dbi:SQLite:' . ($ENV{MOJO_MODE} || 'test') . '.db');
 my $dh = DH->new({
     schema              => $s,
     script_directory    => "$FindBin::Bin/../dbicdh",
@@ -25,100 +25,3 @@ my $dh = DH->new({
 
 $dh->prepare_install;
 $dh->install;
-
-my @tag_names = (
-    'Core',   'Vampire',    'Werewolf',
-    'Mage',   'Promethean', 'Changeling',
-    'Hunter', 'Geist',      'Mummy',
-    'Demon',  'Beast',      'Deviant',
-);
-
-my $tag_rs = $s->resultset('Tag');
-foreach my $tag (@tag_names) {
-    $tag_rs->create({ name => $tag });
-}
-
-my $stem_rs = $s->resultset('Stem')->create({
-    title  => 'Chronicles of Darkness',
-    weight => 0,
-});
-
-$s->resultset('Stem')->create({
-    title  => 'The God-Machine Chronicle',
-    weight => 0,
-});
-
-$s->resultset('Stem')->create({
-    title  => 'Swords at Dawn',
-    weight => 0,
-});
-
-my $branch_rs = $s->resultset('Branch')->create({
-    title   => 'Branch Alpha',
-    weight  => 0,
-    stem_id => $stem_rs->stem_id,
-});
-
-$s->resultset('Node')->create({
-    title     => 'Node One',
-    weight    => 0,
-    branch_id => $branch_rs->branch_id,
-});
-
-$s->resultset('Node')->create({
-    title     => 'Node Two',
-    weight    => 0,
-    branch_id => $branch_rs->branch_id,
-});
-
-my @strings = (
-    'tighten saragat sporal',
-    'imperviable octagon broteas',
-    'triparted retaxation outword',
-    'reoccurring francesco proarbitration',
-    'crudely chicaned ataxite',
-    'diyarbekir unpredestined localised',
-    'bustee analogised flashily',
-    'teataster discernibleness singularise',
-    'gibbosity nonextrusive dikkop',
-    'gnathite jerry importun',
-);
-
-my $w = 0;
-foreach my $string (@strings) {
-    my $leaf_rs = $s->resultset('Leaf')->create({
-        content => $string,
-        node_id => 1,
-        weight  => $w++,
-    });
-
-    foreach my $tag_id (1..2) {
-        $s->resultset('TagLeaf')->create({
-            leaf_id => $leaf_rs->leaf_id,
-            tag_id  => $tag_id,
-        });
-    }
-}
-
-@strings = (
-    'coddle heroic mask baseline even rum',
-    'pig port heartbeat fantastic breakable grave',
-    'contrast mirror blaze faction tongue hemp',
-);
-
-$w = 0;
-foreach my $string (@strings) {
-    my $leaf_rs = $s->resultset('Leaf')->create({
-        content => $string,
-        node_id => 2,
-        weight  => $w++,
-    });
-
-    foreach my $tag_id (2,3) {
-        $s->resultset('TagLeaf')->create({
-            leaf_id => $leaf_rs->leaf_id,
-            tag_id  => $tag_id,
-        });
-    }
-}
-

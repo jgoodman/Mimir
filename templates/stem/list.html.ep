@@ -1,0 +1,9 @@
+% layout 'default';
+% title 'Mimir - Stem';
+<ul>
+% foreach my $stem (@$stems) {
+    <li><a href="/stem/<%= $stem->{'stem_id'} %>"><%= $stem->{'title'} %></a></li>
+% }
+</ul>
+
+%= include 'modals/add-stem'
