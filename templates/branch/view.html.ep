@@ -1,10 +1,10 @@
 % layout 'default';
-% title 'Mimir - Node';
-<h1><%= $title %></h2>
+% title 'Mimir - Branch';
+<h1><a href="/branch/<%= $branch_id %>"><%= $title || "Branch $branch_id" %></a></h2>
 % foreach my $node (@$nodes) {
-    <h2><%= $node->{'title'} %></h2>
+    <h2><a href="/node/<%= $node->{'node_id'} %>"><%= $node->{'title'} || 'Node '.$node->{'node_id'} %></a></h2>
     % foreach my $leaf (@{$node->{'leaves'}}) {
-        <p><a href="/leaf/<%= $leaf->{'leaf_id'} %>"><%= $leaf->{'content'} %></a></p>
+        <a class="leafHannah" href="/leaf/<%= $leaf->{'leaf_id'} %>"><p class="leafHannah"><%= $leaf->{'content'} %></p></a>
     % }
 
     %= include 'modals/add-leaf', node_id => $node->{'node_id'}

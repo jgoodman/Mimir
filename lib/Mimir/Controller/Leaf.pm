@@ -20,4 +20,15 @@ sub add {
     $self->redirect_to("/node/$node_id");
 }
 
+sub update {
+    my $self = shift;
+
+    my %hash = $self->model->leaf_update(
+        leaf_id => $self->param('leaf_id'),
+        content => $self->param('content'),
+    );
+
+    $self->redirect_to('/node/'.$hash{'node_id'});
+}
+
 1;

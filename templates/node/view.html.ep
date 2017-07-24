@@ -2,7 +2,7 @@
 % title 'Mimir - Node';
 
 <script src="/components/Sortable/Sortable.min.js"></script>
-<h2><%= $title %></h2>
+<h2><a href="/node/<%= $node_id %>"><%= $title || "Node $node_id" %></a></h2>
 
 
 % my $i = 0;
@@ -10,8 +10,8 @@
 <div id="listWithHandle" class="list-group">
 % foreach my $leaf (@$leaves) {
 % $i++;
-    <div class="list-group-item" style="border: none">
-        <a href="/leaf/<%= $leaf->{'leaf_id'} %>"><%= $leaf->{'content'} %></a>
+    <div class="list-group-item" style="border: none; padding: 0;">
+        <a class="leafHannah" href="/leaf/<%= $leaf->{'leaf_id'} %>"><p class="leafHannah"><%= $leaf->{'content'} %></p></a>
     </div>
 % }
 </div>

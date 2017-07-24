@@ -265,6 +265,22 @@ sub leaf_view {
     );
 }
 
+sub leaf_update {
+    my $self = shift;
+    my %args = @_;
+
+    my $leaf_rs = $self->schema
+                       ->resultset('Leaf')
+                       ->single({leaf_id => $args{'leaf_id'}})
+                       ->update({content => $args{'content'}});
+
+    return(
+        node_id => $leaf_rs->node_id,
+        leaf_id => $leaf_rs->leaf_id,
+        content => $leaf_rs->content,
+    );
+}
+
 sub tag_view {
     my $self = shift;
     my $id_or_name  = shift;

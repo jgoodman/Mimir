@@ -1,7 +1,7 @@
 % layout 'default';
 % title 'Mimir - Leaf';
 
-<h2></h2>
+<h2><a href="/leaf/<%= $leaf_id %>">Leaf <%= $leaf_id %></a></h2>
 
 <p><%= $content %><p>
 
@@ -13,3 +13,4 @@
 </div>
 
 %= include 'modals/add-tag', leaf_id => $leaf_id
+%= include 'modals/edit-leaf', leaf_id => $leaf_id, content => $content

@@ -44,6 +44,24 @@ div.row.content {
     font-size: larger;
 }
 
+div.col-sm-8.text-left h1 {
+    color: #426042;
+}
+
+div.col-sm-8.text-left h2 {
+    color: #787252;
+}
+
+div.col-sm-8.text-left h1 a {
+    color: #426042;
+    text-decoration: none;
+}
+
+div.col-sm-8.text-left h2 a {
+    color: #787252;
+    text-decoration: none;
+}
+
 footer {
     background:   #787252;
     color:        white;
@@ -60,3 +78,19 @@ footer {
         height:auto;
     }
 }
+
+p.leafHannah:hover {
+    text-decoration: none;
+    outline: 1px solid #DCDCDC;
+}
+
+p.leafHannah {
+    padding: .125em;
+    margin: .125em;
+}
+
+a.leafHannah:hover {
+    text-decoration: none;
+    outline: 1px solid #DCDCDC;
+}
+
