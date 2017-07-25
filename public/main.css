@@ -37,6 +37,10 @@ div.row.content {
     background-color: #D5DED9;
 }
 
+a.sidenav-link {
+    text-decoration: none;
+}
+
 .col-sm-8.text-left {
     padding: 1em;
     background: white;

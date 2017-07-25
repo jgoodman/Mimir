@@ -50,7 +50,7 @@
     <div class="row content">
         <div class="col-sm-2 sidenav" style="text-align: left">
             % foreach my $branch (@{$nav->{'branches'}}) {
-            <p><a href="/branch/<%= $branch->{'branch_id'} %>"><%= $branch->{'title'} %></a></p>
+            <p><a href="/branch/<%= $branch->{'branch_id'} %>" class="sidenav-link"><%= $branch->{'title'} %></a></p>
             % }
             % if ( exists stash->{nav}->{stem_id} ) {
             %= include 'modals/add-branch', stem_id => $nav->{stem_id}

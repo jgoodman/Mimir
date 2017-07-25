@@ -1,0 +1,122 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Mimir::Schema;
+
+my $s = Mimir::Schema->connect('dbi:SQLite:' . ($ENV{MOJO_MODE} || 'test') . '.db');
+
+my @tag_names = (
+    'Core',   'Vampire',    'Werewolf',
+    'Mage',   'Promethean', 'Changeling',
+    'Hunter', 'Geist',      'Mummy',
+    'Demon',  'Beast',      'Deviant',
+);
+
+my $tag_rs = $s->resultset('Tag');
+foreach my $tag (@tag_names) {
+    $tag_rs->create({ name => $tag });
+}
+
+my %data = (
+    'Chronicles of Darkness'    => [
+    ],
+    'The God-Machine Chronicle' => [
+        {
+            title => 'Prologue: Voice of The Angel',
+            nodes => [
+                {
+                    title => '',
+                    leaves => [
+                        'A story about an angel speaking to a boy (known as "Pain Prophet").',
+                        'The angel filled the air with the scent of metal and surrounded the boy with a circle of blue flame',
+                        'Her voice was like noted of a flue and their vibrations calmed the boy\'s fear.',
+                        'The angel begins to explain the secret history of the world.',
+                        'The God-Machine built our world as a resting place for its First Children',
+                        'Man calls them angels or Ancient Ones.',
+                        'The Ancient Ones eventually desired servants.',
+                        'They sent prayer-signals to God-Machine and were granted permission',
+                        'The first attempt was taking beasts of the field and granting them knowledge to speak and walk. They were still wild however and so that didn\'t work out and were cast into the wilderness. They were the Second Children whom men called demons',
+                        'The Ancients tried again and called new servants into being. These were Third Children and called mankind.',
+                    ],
+                },
+            ]
+        }
+    ],
+    'Swords at Dawn'            => [
+        {
+            title => 'Hedgefire Wars',
+            nodes => [
+                {
+                    title => 'Reasons',
+                    leaves => [
+                        'Territory   - A place that provides resource (such as it being a home, goblin fruits, glamour from subjects, and hedge gates). Besides that, changelings are not particularly territorial compared to other supernaturals.',
+                        'Revolution  - Pledges inhibit frequency but they can still occur when a despot arises',
+                        'Invasion    - Everyone loses their shit when there is the threat of The Others showing up. Sometimes changeling freeholds get big too and start to invade others.',
+                        'Ideology    - Changelings will have a difference of opinions with each other sometimes.',
+                        'Vanity      - Ego and pride gets in the way sometimes. Sometimes a grudge is carried so long that people forgot the original reason. The grudge itself becomes the excuse to fight',
+                    ],
+                },
+                {
+                    title => 'Battlelines and Battlefields',
+                    leaves => [
+                        'Spring Court - Does not enjoy war but will do it with style (even if it means losing). The prefer to settle disputes with champions dueling. They follow a strong code of conduct.',
+                        'Summer Court - What matters is winning. This court is militaristic and always prepared for conflict. They show no mercy to The Others yet are more reserved/rational when it comes to other Lost, the Others win if changelings kill each other. While not as formal as spring court, they do hold themselves to a code. Mortal lives are off limits',
+                        'Autumn Court - Prefer not to go to war. Victory to them is when your enemies are too afraid to attack. Assassinations and magic are their thin',
+                        'Winter Court - They don\'t start wars but end them at whatever means are necessary. Attack the clarity of changelings or mortal relative',
+                    ],
+                },
+            ]
+        }
+    ],
+);
+
+my @t = ('', 'Core', 'Changeling');
+
+foreach my $stem_title ('Chronicles of Darkness', 'The God-Machine Chronicle', 'Swords at Dawn') {
+    print "Stem: '$stem_title'\n";
+    my $stem = $s->resultset('Stem')->create({
+        title   => $stem_title,
+        user_id => 1,
+    });
+
+    my $tag_name = shift(@t) || next;
+
+    my $tag = $s->resultset('Tag')->single({
+        name => $tag_name,
+    });
+
+    foreach my $branch_hash (@{$data{$stem_title}}) {
+        my $branch_title = $branch_hash->{'title'};
+        print "  Branch: '$branch_title'\n";
+        my $branch = $s->resultset('Branch')->create({
+            title   => $branch_title,
+            stem_id => $stem->stem_id,
+        });
+        foreach my $node_hash (@{$branch_hash->{nodes}}) {
+            my $node_title = $node_hash->{'title'};
+            print "    Node: '$node_title'\n";
+            my $node = $s->resultset('Node')->create({
+                title     => $node_title,
+                branch_id => $branch->branch_id,
+            });
+            my $w = 0;
+            foreach my $content (@{$node_hash->{'leaves'}}) {
+                my $leaf_rs = $s->resultset('Leaf')->create({
+                    content => $content,
+                    node_id => $node->node_id,
+                    weight  => $w++,
+                });
+
+                $s->resultset('TagLeaf')->create({
+                    leaf_id => $leaf_rs->leaf_id,
+                    tag_id  => $tag->tag_id,
+                });
+            }
+        }
+    }
+}
+
+
