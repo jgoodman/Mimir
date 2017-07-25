@@ -1322,6 +1322,16 @@ DISTRIBUTIONS
       Pod::Simple 3.09
       Time::Local 1.2
       perl 5.010001
+  Mojolicious-Plugin-Authentication-1.32
+    pathname: J/JJ/JJATRIA/Mojolicious-Plugin-Authentication-1.32.tar.gz
+    provides:
+      Mojolicious::Plugin::Authentication 1.32
+    requirements:
+      ExtUtils::MakeMaker 0
+      Mojo::Base 0
+      perl 5.010
+      strict 0
+      warnings 0
   Mojolicious-Plugin-OpenAPI-1.13
     pathname: J/JH/JHTHORSEN/Mojolicious-Plugin-OpenAPI-1.13.tar.gz
     provides:

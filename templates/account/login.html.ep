@@ -1,0 +1,14 @@
+% layout 'default';
+% title 'Mimir - Login';
+
+%= t h1 => 'Account Login'
+%= form_for '/login' => (method => 'post') => begin
+<form method="post" action="/entrada">
+    <table>
+        <tr><td>Username:</td><td><%= text_field 'user' %></td></tr>
+        <tr><td>Password:</td><td> <%= password_field 'pass' %></td></tr>
+        <tr><td colspan=2>
+        %= submit_button 'Submit' 
+        </td></tr>
+    </table>
+%= end

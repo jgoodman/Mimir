@@ -23,16 +23,19 @@ foreach my $tag (@tag_names) {
 my $stem_rs = $s->resultset('Stem')->create({
     title  => 'Chronicles of Darkness',
     weight => 0,
+    user_id => 1,
 });
 
 $s->resultset('Stem')->create({
     title  => 'The God-Machine Chronicle',
     weight => 0,
+    user_id => 1,
 });
 
 $s->resultset('Stem')->create({
     title  => 'Swords at Dawn',
     weight => 0,
+    user_id => 1,
 });
 
 my $branch_rs = $s->resultset('Branch')->create({

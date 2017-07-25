@@ -25,3 +25,8 @@ my $dh = DH->new({
 
 $dh->prepare_install;
 $dh->install;
+
+$s->resultset('User')->create({
+    name => 'admin',
+    pass => 'b00t',
+});

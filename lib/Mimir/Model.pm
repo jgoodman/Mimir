@@ -7,11 +7,27 @@ has schema => sub {
     return Mimir::Schema->connect('dbi:SQLite:' . ($ENV{MOJO_MODE} || 'test') . '.db');
 };
 
+sub get_user_by_id {
+    my $self = shift;
+    my $res  = $self->schema->resultset('User')->single({user_id => shift});
+    my %resp;
+    foreach (qw(user_id name pass)) { $resp{$_} = $res ? $res->$_ : '' }
+    return \%resp;
+}
+
+sub get_user_by_name {
+    my $self = shift;
+    my $res  = $self->schema->resultset('User')->single({name => shift});
+    my %resp;
+    foreach (qw(user_id name pass)) { $resp{$_} = $res ? $res->$_ : '' }
+    return \%resp;
+}
+
 sub nav {
     my $self  = shift;
+    my $user  = shift;
     my $field = shift;
     my $id    = shift;
-
 
     my $active_stem_rs;
     my $active_branch_rs;
@@ -35,6 +51,7 @@ sub nav {
     }
 
     my @stems;
+    #my $stems_rs = $self->schema->resultset('Stem')->search({user_id => $user->{'user_id'}}); # TODO
     my $stems_rs = $self->schema->resultset('Stem')->search();
     while (my $stem_rs = $stems_rs->next) {
         push @stems, {

@@ -1,6 +1,7 @@
 requires 'Mojolicious';
 requires 'IO::Socket::SSL';
 requires 'Mojolicious::Plugin::OpenAPI';
+requires 'Mojolicious::Plugin::Authentication';
 requires 'Data::Random';
 requires 'DBI';
 requires 'DBD::SQLite';

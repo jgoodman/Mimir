@@ -1,3 +1,4 @@
+% if ($is_authenticated) {
 <button
     type="button"
     class="glyphicon glyphicon-tag btn btn-primary btn-sm"
@@ -24,3 +25,4 @@
         </div>
     </div>
 </div>
+% }

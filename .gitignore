@@ -4,3 +4,5 @@ dbicdh/
 local/
 mimir.conf
 *.db
+log
+*.pid
