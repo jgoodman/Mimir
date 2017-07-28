@@ -32,7 +32,7 @@ sub startup {
     my $r = $self->routes;
 
     $r->get('/')->to("stem#list");
-    foreach my $table (qw(tag leaf node branch stem)) {
+    foreach my $table (qw(tag leaf node branch stem status)) {
         $r->get("/$table/:$table\_id")->to("$table#view");
     }
 

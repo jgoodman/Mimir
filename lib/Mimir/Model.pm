@@ -300,6 +300,53 @@ sub leaf_update {
     );
 }
 
+sub status_view {
+    my $self = shift;
+    my $id_or_name  = shift;
+
+    my $field  = ($id_or_name =~ m/^\d+$/) ? 'status_id' : 'name';
+    my $status_rs = $self->schema->resultset('Status')->single({$field => $id_or_name});
+
+    my %branch;
+
+    my $nodes = $status_rs->nodes;
+    while (my $node_rs = $nodes->next) {
+        my $branch_id = $node_rs->branch->branch_id;
+        $branch{$branch_id} ||= {
+            name  => $node_rs->branch->name,
+            nodes => [ ],
+        };
+        push @{$branch{$branch_id}->{'nodes'}}, {
+            node_id => $node_rs->node_id,
+            name    => $node_rs->name,
+        };
+    }
+
+    my @branches;
+
+    return(
+        status_id => $status_rs->status_id,
+        name      => $status_rs->name,
+        branches  => \@branches,
+    );
+}
+
+sub status_add {
+    my $self = shift;
+    my %args = @_;
+
+    my $status_rs = $self->schema->resultset('Status')->create({
+        name  => $args{'name'},
+        color => $args{'color'},
+    });
+
+    return(
+        status_id => $status_rs->status_id,
+        name      => $status_rs->name,
+        color     => $status_rs->color,
+    );
+}
+
 sub tag_view {
     my $self = shift;
     my $id_or_name  = shift;
