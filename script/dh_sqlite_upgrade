@@ -16,7 +16,7 @@ GetOptions(
     'to=i'   => \$t,
 );
 
-my $s = Mimir::Schema->connect('dbi:SQLite:' . ($ENV{MOJO_MODE} || 'test') . '.db');
+my $s = Mimir::Schema->connect('dbi:SQLite:data/' . ($ENV{MOJO_MODE} || 'test') . '.db');
 my $dh = DH->new({
     schema              => $s,
     script_directory    => "$FindBin::Bin/../dbicdh",

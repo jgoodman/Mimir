@@ -1,5 +1,6 @@
 % layout 'default';
 % title 'Mimir - Stem';
+<h1>Stems</h1>
 <ul>
 % foreach my $stem (@$stems) {
     <li><a href="/stem/<%= $stem->{'stem_id'} %>"><%= $stem->{'title'} %></a></li>

@@ -4,7 +4,7 @@ use Mimir::Schema;
 
 has schema => sub {
     # TODO: config connect settings
-    return Mimir::Schema->connect('dbi:SQLite:' . ($ENV{MOJO_MODE} || 'test') . '.db');
+    return Mimir::Schema->connect('dbi:SQLite:data/' . ($ENV{MOJO_MODE} || 'test') . '.db');
 };
 
 sub get_user_by_id {
@@ -74,7 +74,7 @@ sub nav {
     }
 
     return {
-        stems    => \@stems,
+        stems    => [ ], #\@stems, #TODO remove this entirely
         branches => \@branches,
         ($active_stem_rs ? (stem_id  => $active_stem_rs->stem_id) : ())
     };
@@ -101,10 +101,12 @@ sub stem_view {
 
 sub stem_add {
     my $self = shift;
+    my $user = shift;
     my %args = @_;
 
     my $stem_rs = $self->schema->resultset('Stem')->create({
-        title => $args{title},
+        title   => $args{title},
+        user_id => $user->{'user_id'}
     });
 
     return();

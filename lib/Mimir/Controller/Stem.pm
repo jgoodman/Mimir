@@ -19,6 +19,7 @@ sub add {
     my $self = shift;
 
     $self->model->stem_add(
+        $self->current_user,
         title => $self->param('title'),
     );
 

@@ -11,10 +11,12 @@ __PACKAGE__->add_columns(
     title     => { data_type => 'text',    is_nullable => 1, },
     weight    => { data_type => 'integer', is_nullable => 1, },
     stem_id   => { data_type => 'integer', is_nullable => 1, },
+    status_id => { data_type => 'integer', is_nullable => 1, },
 );
 
 __PACKAGE__->set_primary_key('branch_id');
-__PACKAGE__->belongs_to(stem  => 'Mimir::Schema::Result::Stem',  'stem_id',  { join_type => 'left' });
+__PACKAGE__->belongs_to(stem   => 'Mimir::Schema::Result::Stem',  'stem_id',  { join_type => 'left' });
+__PACKAGE__->belongs_to(status => 'Mimir::Schema::Result::Status',  'status_id',  { join_type => 'left' });
 
 __PACKAGE__->has_many(nodes => 'Mimir::Schema::Result::Node', 'branch_id', { order_by => { -asc => [qw/weight node_id/]} });
 

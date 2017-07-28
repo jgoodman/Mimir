@@ -5,8 +5,33 @@ use warnings;
 use FindBin;
 use lib "$FindBin::Bin/../lib";
 use Mimir::Schema;
+use Tie::IxHash;
 
-my $s = Mimir::Schema->connect('dbi:SQLite:' . ($ENV{MOJO_MODE} || 'test') . '.db');
+my $s = Mimir::Schema->connect('dbi:SQLite:data/' . ($ENV{MOJO_MODE} || 'test') . '.db');
+
+my @status = (
+    {
+        name  => 'todo',
+        color => 'red',
+    },
+    {
+        name  => 'in_progress',
+        color => 'orange',
+    },
+    {
+        name  => 'review',
+        color => 'yellow',
+    },
+    {
+        name  => 'complete',
+        color => 'green',
+    },
+);
+
+my $status_rs = $s->resultset('Status');
+foreach my $status_hash (@status) {
+    $status_rs->create($status_hash);
+}
 
 my @tag_names = (
     'Core',   'Vampire',    'Werewolf',
@@ -20,32 +45,33 @@ foreach my $tag (@tag_names) {
     $tag_rs->create({ name => $tag });
 }
 
-my %data = (
-    'Chronicles of Darkness'    => [
-    ],
-    'The God-Machine Chronicle' => [
-        {
-            title => 'Prologue: Voice of The Angel',
-            nodes => [
-                {
-                    title => '',
-                    leaves => [
-                        'A story about an angel speaking to a boy (known as "Pain Prophet").',
-                        'The angel filled the air with the scent of metal and surrounded the boy with a circle of blue flame',
-                        'Her voice was like noted of a flue and their vibrations calmed the boy\'s fear.',
-                        'The angel begins to explain the secret history of the world.',
-                        'The God-Machine built our world as a resting place for its First Children',
-                        'Man calls them angels or Ancient Ones.',
-                        'The Ancient Ones eventually desired servants.',
-                        'They sent prayer-signals to God-Machine and were granted permission',
-                        'The first attempt was taking beasts of the field and granting them knowledge to speak and walk. They were still wild however and so that didn\'t work out and were cast into the wilderness. They were the Second Children whom men called demons',
-                        'The Ancients tried again and called new servants into being. These were Third Children and called mankind.',
-                    ],
-                },
-            ]
-        }
-    ],
-    'Swords at Dawn'            => [
+tie my %data => 'Tie::IxHash';
+%data = (
+    'Chronicles of Darkness'              => [ ],
+
+    'Vampire: The Requiem'                => [ ],
+    'VTR: Kiss of the Succubus: Daeva'    => [ ],
+    'VTR: Lords Over the Damned: Ventrue' => [ ],
+    'VTR: Savage and Macabre: Gangrel'    => [ ],
+    'VTR: Shadows in the Dark: Mekhet'    => [ ],
+    'VTR: The Beast That Haunts the Blood: Nosferatu' => [ ],
+
+    'Werewolf: The Forsaken'              => [ ],
+
+    'Mage: The Awakening'                 => [ ],
+
+    'Promethean: The Created'             => [ ],
+
+    'Changeling: The Lost'                => [ ],
+    'CTL: Autumn Nightmares'              => [ ],
+    'CTL: Winter Masques'                 => [ ],
+    'CTL: Rites of Spring'                => [ ],
+    'CTL: Lords of Summer'                => [ ],
+    'CTL: Equinox Road'                   => [ ],
+    'CTL: The Rose Bride\'s Plight'       => [ ],
+    'CTL: Night Horrors: Grim Fears'      => [ ],
+    'CTL: Dancers in the Dusk'            => [ ],
+    'CTL: Swords at Dawn'                 => [
         {
             title => 'Hedgefire Wars',
             nodes => [
@@ -58,6 +84,7 @@ my %data = (
                         'Ideology    - Changelings will have a difference of opinions with each other sometimes.',
                         'Vanity      - Ego and pride gets in the way sometimes. Sometimes a grudge is carried so long that people forgot the original reason. The grudge itself becomes the excuse to fight',
                     ],
+                    tags => [qw(Changeling)],
                 },
                 {
                     title => 'Battlelines and Battlefields',
@@ -67,25 +94,124 @@ my %data = (
                         'Autumn Court - Prefer not to go to war. Victory to them is when your enemies are too afraid to attack. Assassinations and magic are their thin',
                         'Winter Court - They don\'t start wars but end them at whatever means are necessary. Attack the clarity of changelings or mortal relative',
                     ],
+                    tags => [qw(Changeling)],
                 },
             ]
         }
     ],
+    'CTL: Goblin Markets'                 => [ ],
+    'CTL: Victorian Lost'                 => [ ],
+
+    #'Hunter: The Vigil'                   => [ ],
+    #'Geist: The Sin-Eaters'               => [ ],
+    #'Mummy: The Curse'                    => [ ],
+
+    'Demon: The Descent'                  => [ ],
+    'DTD: Demon: The Descent Quickstart'  => [ ],
+    'DTD: Flowers of Hell: The Demon Players Guide' => [
+        {
+            title => 'Prologue',
+            nodes => [
+                {
+                    title => 'The Startup',
+                    leaves => [
+                        'A story about a fallen angel getting his cover blown.',
+                    ],
+                    tags => [qw(Demon)],
+                },
+            ]
+        },
+        {
+            title => 'Introduction',
+            nodes => [
+                {
+                    title => '',
+                    leaves => [
+                        '',
+                    ],
+                    tags => [qw(Demon)],
+                },
+            ]
+        },
+        {
+            title => 'Chapter One: Fallen From The Machine',
+            nodes => [
+                {
+                    title => 'Body, Mind, and Soul',
+                    leaves => [
+                        '',
+                    ],
+                    tags => [qw(Demon)],
+                },
+            ]
+        },
+    ],
+    'DTD: Demon Storytellers Guide'       => [ ],
+
+    #'Beast: The Primordial'               => [ ],
+
+    'Ghost Stories'                       => [ ],
+    'Antagonists'                         => [ ],
+    'Mysterious Places'                   => [ ],
+    #'Chicago'                             => [ ],
+    'Armory'                              => [ ],
+    'Second Sight'                        => [ ],
+    #'Shadows of the UK'                   => [ ],
+    #'Skinchangers'                        => [ ],
+    'Tales from the 13th Precinct'        => [ ],
+    #'Shadows of Mexico'                   => [ ],
+    'Urban Legends'                       => [ ],
+    #'Book of Spirits'                     => [ ],
+    'Asylum'                              => [ ],
+    'Reliquary'                           => [ ],
+    #'Changing Breeds'                     => [ ],
+    #'Chicago Workings'                    => [ ],
+    #'Midnight Roads'                      => [ ],
+    #'The Harvesters'                      => [ ],
+    #'Innocents'                           => [ ],
+    #'The New Kid'                         => [ ],
+    #'Dogs of War'                         => [ ],
+    #'Ruins of Ur'                         => [ ],
+    #'Slasher'                             => [ ],
+    #'Inferno'                             => [ ],
+    'Armory Reloaded'                     => [ ],
+    #'Immortals'                           => [ ],
+    #'Mirrors'                             => [ ],
+    #'Glimpse of the Unknown'              => [ ],
+    #'Strangeness in the Proportion'       => [ ],
+    #'Falling Scales'                      => [ ],
+    #'The God-Machine Chronicle Anthology' => [ ],
+    'The God-Machine Chronicle'           => [
+        {
+            title => 'Prologue',
+            nodes => [
+                {
+                    title => 'Voice of The Angel',
+                    leaves => [
+                        'A story about an angel speaking to a boy (known as "Pain Prophet").',
+                        'The angel filled the air with the scent of metal and surrounded the boy with a circle of blue flame',
+                        'Her voice was like noted of a flue and their vibrations calmed the boy\'s fear.',
+                        'The angel begins to explain the secret history of the world.',
+                        'The God-Machine built our world as a resting place for its First Children',
+                        'Man calls them angels or Ancient Ones.',
+                        'The Ancient Ones eventually desired servants.',
+                        'They sent prayer-signals to God-Machine and were granted permission',
+                        'The first attempt was taking beasts of the field and granting them knowledge to speak and walk. They were still wild however and so that didn\'t work out and were cast into the wilderness. They were the Second Children whom men called demons',
+                        'The Ancients tried again and called new servants into being. These were Third Children and called mankind.',
+                    ],
+                    tags => [qw(Core)],
+                },
+            ]
+        }
+    ],
+    'Dark Eras'                           => [ ],
 );
 
-my @t = ('', 'Core', 'Changeling');
-
-foreach my $stem_title ('Chronicles of Darkness', 'The God-Machine Chronicle', 'Swords at Dawn') {
+foreach my $stem_title (keys %data) {
     print "Stem: '$stem_title'\n";
     my $stem = $s->resultset('Stem')->create({
         title   => $stem_title,
         user_id => 1,
-    });
-
-    my $tag_name = shift(@t) || next;
-
-    my $tag = $s->resultset('Tag')->single({
-        name => $tag_name,
     });
 
     foreach my $branch_hash (@{$data{$stem_title}}) {
@@ -110,10 +236,16 @@ foreach my $stem_title ('Chronicles of Darkness', 'The God-Machine Chronicle', '
                     weight  => $w++,
                 });
 
-                $s->resultset('TagLeaf')->create({
-                    leaf_id => $leaf_rs->leaf_id,
-                    tag_id  => $tag->tag_id,
-                });
+                foreach my $tag_name (@{$node_hash->{'tags'}}) {
+                    my $tag = $s->resultset('Tag')->single({
+                        name => $tag_name,
+                    });
+
+                    $s->resultset('TagLeaf')->create({
+                        leaf_id => $leaf_rs->leaf_id,
+                        tag_id  => $tag->tag_id,
+                    });
+                }
             }
         }
     }
