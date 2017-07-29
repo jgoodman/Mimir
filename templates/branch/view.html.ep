@@ -1,10 +1,14 @@
 % layout 'default';
 % title 'Mimir - Branch';
+% use Text::Markdown 'markdown';
 <h1><a href="/branch/<%= $branch_id %>"><%= $title || "Branch $branch_id" %></a></h2>
 % foreach my $node (@$nodes) {
     <h2><a href="/node/<%= $node->{'node_id'} %>"><%= $node->{'title'} || 'Node '.$node->{'node_id'} %></a></h2>
     % foreach my $leaf (@{$node->{'leaves'}}) {
-        <a class="leafHannah" href="/leaf/<%= $leaf->{'leaf_id'} %>"><p class="leafHannah"><%= $leaf->{'content'} %></p></a>
+        <a class="leafHannah" href="/leaf/<%= $leaf->{'leaf_id'} %>">
+            % (my $leaf_content = markdown($leaf->{'content'})) =~ s{^<p>}{<p class="leafHannah">};
+            <%== $leaf_content %>
+        </a>
     % }
 
     %= include 'modals/add-leaf', node_id => $node->{'node_id'}

@@ -1,11 +1,24 @@
 % layout 'default';
 % title 'Mimir - Node';
+% use Text::Markdown 'markdown';
 
 <script src="/components/Sortable/Sortable.min.js"></script>
-<h2><a href="/node/<%= $node_id %>"><%= $title || "Node $node_id" %></a></h2>
+<table style="width:100%">
+	<tr>
+	<td>
+		<h2><a href="/node/<%= $node_id %>"><%= $title || "Node $node_id" %></a></h2>
+	</td>
+	<td>
+		% if ($status) {
+		<span class="label label-default" style="background:<%= $status_color %>;font-size: 115%;float:right;"><%= $status %></span>
+		% }
+	</td>
+	</tr>
+</table>
 
+% if ($is_authenticated) {
 <div class="form-group">
-  	<select class="form-control" id="changeStatus" name="status_id" selected="<%= $node_status %>">
+  	<select class="form-control" id="changeStatus" name="status_id" selected="<%= $status %>">
 		<option value=""></option>
     	% foreach my $status (@{$nav->{'statuses'}}) {
         <option value="<%= $status->{'status_id'} %>"><%= $status->{'name'} %></option>
@@ -20,9 +33,9 @@ $('select.form-control').change(function(){
       	url: '/api/node/<%= $node_id %>/status',
       	data: {"status_id": $('select.form-control').val()},
     });
-
 });
 </script>
+% }
 
 % my $i = 0;
 
@@ -30,7 +43,10 @@ $('select.form-control').change(function(){
 % foreach my $leaf (@$leaves) {
 % $i++;
     <div class="list-group-item" style="border: none; padding: 0;">
-        <a class="leafHannah" href="/leaf/<%= $leaf->{'leaf_id'} %>"><p class="leafHannah"><%= $leaf->{'content'} %></p></a>
+        <a class="leafHannah" href="/leaf/<%= $leaf->{'leaf_id'} %>">
+            % (my $leaf_content = markdown($leaf->{'content'})) =~ s{^<p>}{<p class="leafHannah">};
+            <%== $leaf_content %>
+        </a>
     </div>
 % }
 </div>
@@ -38,6 +54,7 @@ $('select.form-control').change(function(){
 %= include 'modals/add-leaf', node_id => $node_id
 
 
+% if ($is_authenticated) {
 <script>
 var sortable2 = Sortable.create(listWithHandle, {
     animation: 150,
@@ -54,3 +71,4 @@ var sortable2 = Sortable.create(listWithHandle, {
     },
 });
 </script>
+% }

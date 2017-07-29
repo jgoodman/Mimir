@@ -202,10 +202,13 @@ sub node_view {
         };
     }
 
+    
+
     return(
         node_id => $node_rs->node_id,
         title   => $node_rs->title,
-        node_status => $node_rs->status ? $node_rs->status->name : '',
+        status  => $node_rs->status ? $node_rs->status->name : '',
+        status_color => $node_rs->status ? $node_rs->status->color : '',
         leaves  => \@leaves,
     );
 }

@@ -1,6 +1,10 @@
 % layout 'default';
-% title 'Mimir - Node';
-<h2><%= $name %></h2>
+% title 'Mimir - Tag';
+%use Text::Markdown 'markdown';
+<h2>Tag: <%= $name %></h2>
 % foreach my $leaf (@$leaves) {
-    <p><a href="/leaf/<%= $leaf->{'leaf_id'} %>"><%= $leaf->{'content'} %></a></p>
+    <a class="leafHannah" href="/leaf/<%= $leaf->{'leaf_id'} %>">
+        % (my $leaf_content = markdown($leaf->{'content'})) =~ s{^<p>}{<p class="leafHannah">};
+        <%== $leaf_content %>
+    </a>
 % }
