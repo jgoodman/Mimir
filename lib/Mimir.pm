@@ -60,13 +60,17 @@ sub startup {
       ->over(authenticated => 1)
       ->to("leaf#update");
 
-    $r->put("/leaf/:leaf_id/content")
-      ->over(authenticated => 1)
-      ->to("leaf#update");
+    #$r->put("/api/leaf/:leaf_id/content")
+      #->over(authenticated => 1)
+      #->to("leaf#update");
 
     $r->put("/api/node/:node_id/order")
       ->over(authenticated => 1)
       ->to("node#update_order");
+
+    $r->put("/api/node/:node_id/status")
+      ->over(authenticated => 1)
+      ->to("node#update_status");
 
     $r->get('/login')->to("account#login");
     $r->post('/login')->to("account#signin");

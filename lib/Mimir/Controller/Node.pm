@@ -32,4 +32,15 @@ sub update_order {
     $self->render(json => { success => $success });
 }
 
+sub update_status {
+    my $self = shift;
+
+    my $success = $self->model->node_update_status(
+        node_id   => $self->param('node_id'),
+        status_id => $self->param('status_id'),
+    );
+
+    $self->render(json => { success => $success });
+}
+
 1;

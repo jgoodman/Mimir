@@ -73,9 +73,20 @@ sub nav {
         }
     }
 
+    my @statuses;
+    my $statuses_rs = $self->schema->resultset('Status')->search();
+    while (my $status_rs = $statuses_rs->next) {
+        push @statuses, {
+            status_id => $status_rs->status_id,
+            name      => $status_rs->name,
+            color     => $status_rs->color,
+        };
+    }
+
     return {
         stems    => [ ], #\@stems, #TODO remove this entirely
         branches => \@branches,
+        statuses => \@statuses,
         ($active_stem_rs ? (stem_id  => $active_stem_rs->stem_id) : ())
     };
 }
@@ -194,8 +205,23 @@ sub node_view {
     return(
         node_id => $node_rs->node_id,
         title   => $node_rs->title,
+        node_status => $node_rs->status ? $node_rs->status->name : '',
         leaves  => \@leaves,
     );
+}
+
+sub node_update_status {
+    my $self = shift;
+    my %args = @_;
+
+    my $node_id    = $args{node_id}   // die 'no node_id';
+    my $status_id  = $args{status_id};
+    $status_id = undef if defined $status_id && $status_id eq '';
+
+    my $node_rs = $self->schema->resultset('Node')->single({node_id => $node_id});
+    $node_rs->update({status_id => $status_id});
+
+    return 1;
 }
 
 sub node_update_order {
@@ -307,22 +333,26 @@ sub status_view {
     my $field  = ($id_or_name =~ m/^\d+$/) ? 'status_id' : 'name';
     my $status_rs = $self->schema->resultset('Status')->single({$field => $id_or_name});
 
-    my %branch;
+    my %branches;
 
     my $nodes = $status_rs->nodes;
     while (my $node_rs = $nodes->next) {
         my $branch_id = $node_rs->branch->branch_id;
-        $branch{$branch_id} ||= {
-            name  => $node_rs->branch->name,
-            nodes => [ ],
+        $branches{$branch_id} ||= {
+            branch_id => $branch_id,
+            title     => $node_rs->branch->title,
+            nodes     => [ ],
         };
-        push @{$branch{$branch_id}->{'nodes'}}, {
+        push @{$branches{$branch_id}->{'nodes'}}, {
             node_id => $node_rs->node_id,
-            name    => $node_rs->name,
+            title   => $node_rs->title,
         };
     }
 
     my @branches;
+    foreach my $branch_id (sort keys %branches) {
+        push @branches, $branches{$branch_id};
+    }
 
     return(
         status_id => $status_rs->status_id,

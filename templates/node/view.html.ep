@@ -4,6 +4,25 @@
 <script src="/components/Sortable/Sortable.min.js"></script>
 <h2><a href="/node/<%= $node_id %>"><%= $title || "Node $node_id" %></a></h2>
 
+<div class="form-group">
+  	<select class="form-control" id="changeStatus" name="status_id" selected="<%= $node_status %>">
+		<option value=""></option>
+    	% foreach my $status (@{$nav->{'statuses'}}) {
+        <option value="<%= $status->{'status_id'} %>"><%= $status->{'name'} %></option>
+		% }
+  	</select>
+</div>
+
+<script>
+$('select.form-control').change(function(){
+   $.ajax({
+   		type: 'PUT',
+      	url: '/api/node/<%= $node_id %>/status',
+      	data: {"status_id": $('select.form-control').val()},
+    });
+
+});
+</script>
 
 % my $i = 0;
 
@@ -24,13 +43,13 @@ var sortable2 = Sortable.create(listWithHandle, {
     animation: 150,
     onEnd: function (evt) {
         $.ajax({
+            type: 'PUT',
+            url: '/api/node/<%= $node_id %>/order',
             data: {
                 "node_id":<%= $node_id %>,
                 "old_index":evt.oldIndex,
                 "new_index":evt.newIndex
             },
-            type: 'PUT',
-            url: '/api/node/<%= $node_id %>/order'
         });
     },
 });
