@@ -1,9 +1,10 @@
 % layout 'default';
 % title 'Mimir - Leaf';
+% use Text::Markdown 'markdown';
 
-<h2><a href="/leaf/<%= $leaf_id %>">Leaf <%= $leaf_id %></a></h2>
+<h3>Leaf <%= $leaf_id %></h3>
 
-<p><%= $content %><p>
+<%== markdown($content) %>
 
 <hr>
 <div style="color:grey; font-size:smaller; padding: 0em 0em .5em 0em; margin: 0em 0em .5em 0em; ">
