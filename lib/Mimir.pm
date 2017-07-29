@@ -72,6 +72,10 @@ sub startup {
       ->over(authenticated => 1)
       ->to("node#update_status");
 
+    $r->put("/api/stem/:stem_id/status")
+      ->over(authenticated => 1)
+      ->to("stem#update_status");
+
     $r->get('/login')->to("account#login");
     $r->post('/login')->to("account#signin");
     $r->get('/logout')->to("account#signout");

@@ -107,7 +107,21 @@ sub stem_list {
 
 sub stem_view {
     my $self = shift;
-    return();
+    my $stem_rs = $self->schema->resultset('Stem')->single({stem_id => shift});
+
+    my @branches;
+    my $branches_rs = $stem_rs->branches;
+    while (my $branch_rs = $branches_rs->next) {
+        push @branches, { $self->branch_view($branch_rs->branch_id) };
+    }
+
+    return(
+        stem_id      => $stem_rs->stem_id,
+        title        => $stem_rs->title,
+        status       => $stem_rs->status ? $stem_rs->status->name : '',
+        status_color => $stem_rs->status ? $stem_rs->status->color : '',
+        branches     => \@branches,
+    );
 }
 
 sub stem_add {
@@ -121,6 +135,20 @@ sub stem_add {
     });
 
     return();
+}
+
+sub stem_update_status {
+    my $self = shift;
+    my %args = @_;
+
+    my $stem_id    = $args{stem_id}   // die 'no stem_id';
+    my $status_id  = $args{status_id};
+    $status_id = undef if defined $status_id && $status_id eq '';
+
+    my $stem_rs = $self->schema->resultset('Stem')->single({stem_id => $stem_id});
+    $stem_rs->update({status_id => $status_id});
+
+    return 1;
 }
 
 sub branch_add {
@@ -201,8 +229,6 @@ sub node_view {
             content => $leaf_rs->content
         };
     }
-
-    
 
     return(
         node_id => $node_rs->node_id,

@@ -26,4 +26,15 @@ sub add {
     $self->redirect_to("/");
 }
 
+sub update_status {
+    my $self = shift;
+
+    my $success = $self->model->stem_update_status(
+        stem_id   => $self->param('stem_id'),
+        status_id => $self->param('status_id'),
+    );
+
+    $self->render(json => { success => $success });
+}
+
 1;

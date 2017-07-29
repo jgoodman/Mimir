@@ -1,2 +1,52 @@
 % layout 'default';
 % title 'Mimir - Stem';
+% use Text::Markdown 'markdown';
+
+<table style="width:100%">
+    <tr>
+    <td>
+        <h1><%= $title || "Stem $stem_id" %></h1>
+    </td>
+    <td>
+        % if ($status) {
+        <span class="label label-default" style="background:<%= $status_color %>;font-size: 115%;float:right;"><%= $status %></span>
+        % }
+    </td>
+    </tr>
+</table>
+
+% if ($is_authenticated) {
+<div class="form-group">
+    <select class="form-control" id="changeStatus" name="status_id" selected="<%= $status %>">
+        <option value=""></option>
+        % foreach my $status (@{$nav->{'statuses'}}) {
+        <option value="<%= $status->{'status_id'} %>"><%= $status->{'name'} %></option>
+        % }
+    </select>
+</div>
+
+<script>
+$('select.form-control').change(function(){
+   $.ajax({
+        type: 'PUT',
+        url: '/api/stem/<%= $stem_id %>/status',
+        data: {"status_id": $('select.form-control').val()},
+    });
+});
+</script>
+% }
+
+% foreach my $branch (@$branches) {
+<h2><a href="/branch/<%= $branch->{'branch_id'} %>"><%= $branch->{'title'} || 'Branch '.$branch->{'branch_id'} %></a></h2>
+% foreach my $node (@{$branch->{'nodes'}}) {
+    <h3><a href="/node/<%= $node->{'node_id'} %>"><%= $node->{'title'} || 'Node '.$node->{'node_id'} %></a></h3>
+    % foreach my $leaf (@{$node->{'leaves'}}) {
+        <a class="leafHannah" href="/leaf/<%= $leaf->{'leaf_id'} %>">
+            % (my $leaf_content = markdown($leaf->{'content'})) =~ s{^<p>}{<p class="leafHannah">};
+            <%== $leaf_content %>
+        </a>
+    % }
+
+    <hr>
+% }
+% }

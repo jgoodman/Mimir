@@ -1,7 +1,7 @@
 % layout 'default';
 % title 'Mimir - Branch';
 % use Text::Markdown 'markdown';
-<h1><a href="/branch/<%= $branch_id %>"><%= $title || "Branch $branch_id" %></a></h2>
+<h1><a href="/branch/<%= $branch_id %>"><%= $title || "Branch $branch_id" %></a></h1>
 % foreach my $node (@$nodes) {
     <h2><a href="/node/<%= $node->{'node_id'} %>"><%= $node->{'title'} || 'Node '.$node->{'node_id'} %></a></h2>
     % foreach my $leaf (@{$node->{'leaves'}}) {
