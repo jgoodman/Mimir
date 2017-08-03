@@ -7,4 +7,6 @@ requires 'DBIx::Class';
 requires 'DBIx::Class::DeploymentHandler';
 requires 'Tie::IxHash';
 requires 'Text::Markdown';
-requires 'TAP::Formatter::JUnit';
+on 'develop' => sub {
+    requires 'TAP::Formatter::JUnit';
+};
