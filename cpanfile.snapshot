@@ -948,6 +948,45 @@ DISTRIBUTIONS
       Mozilla::CA 0
       Net::SSLeay 1.46
       Scalar::Util 0
+  IO-Tty-1.12
+    pathname: T/TO/TODDR/IO-Tty-1.12.tar.gz
+    provides:
+      IO::Pty 1.12
+      IO::Tty 1.12
+      IO::Tty::Constant undef
+    requirements:
+      ExtUtils::MakeMaker 0
+      Test::More 0
+  IO-stringy-2.111
+    pathname: D/DS/DSKOLL/IO-stringy-2.111.tar.gz
+    provides:
+      IO::AtomicFile 2.111
+      IO::Clever 1.01
+      IO::InnerFile 2.111
+      IO::Lines 2.111
+      IO::Scalar 2.111
+      IO::ScalarArray 2.111
+      IO::Stringy 2.111
+      IO::Wrap 2.111
+      IO::WrapTie 2.111
+      IO::WrapTie::Master 2.111
+      IO::WrapTie::Slave 2.111
+    requirements:
+      ExtUtils::MakeMaker 0
+  IPC-Run-0.96
+    pathname: T/TO/TODDR/IPC-Run-0.96.tar.gz
+    provides:
+      IPC::Run 0.96
+      IPC::Run::Debug 0.96
+      IPC::Run::IO 0.96
+      IPC::Run::Timer 0.96
+      IPC::Run::Win32Helper 0.96
+      IPC::Run::Win32IO 0.96
+      IPC::Run::Win32Pump 0.96
+    requirements:
+      ExtUtils::MakeMaker 0
+      IO::Pty 1.08
+      Test::More 0.47
   Image-Grab-1.4.2
     pathname: M/MA/MAHEX/Image-Grab-1.4.2.tar.gz
     provides:
@@ -1749,6 +1788,22 @@ DISTRIBUTIONS
       parent 0.223
       strict 1.03
       warnings 1.03
+  MooseX-NonMoose-0.26
+    pathname: D/DO/DOY/MooseX-NonMoose-0.26.tar.gz
+    provides:
+      MooseX::NonMoose 0.26
+      MooseX::NonMoose::InsideOut 0.26
+      MooseX::NonMoose::Meta::Role::Class 0.26
+      MooseX::NonMoose::Meta::Role::Constructor 0.26
+    requirements:
+      ExtUtils::MakeMaker 6.30
+      List::MoreUtils 0
+      Module::Runtime 0
+      Moose::Exporter 0
+      Moose::Role 2.0000
+      Moose::Util 0
+      Try::Tiny 0
+      warnings 0
   MooseX-Role-Parameterized-1.10
     pathname: E/ET/ETHER/MooseX-Role-Parameterized-1.10.tar.gz
     provides:
@@ -2143,6 +2198,22 @@ DISTRIBUTIONS
       perl 5.006
       strict 0
       warnings 0
+  TAP-Formatter-JUnit-0.11
+    pathname: G/GT/GTERMARS/TAP-Formatter-JUnit-0.11.tar.gz
+    provides:
+      TAP::Formatter::JUnit 0.11
+      TAP::Formatter::JUnit::Result undef
+      TAP::Formatter::JUnit::Session undef
+    requirements:
+      File::Slurp 0
+      IO::Scalar 0
+      IPC::Run 0
+      Moose 0
+      MooseX::NonMoose 0
+      TAP::Harness 3.12
+      Test::More 0
+      Test::XML 0
+      XML::Generator 0
   Test-Class-0.50
     pathname: E/ET/ETHER/Test-Class-0.50.tar.gz
     provides:
@@ -2390,6 +2461,20 @@ DISTRIBUTIONS
       Test::Builder 0.13
       Test::Builder::Tester 1.02
       perl 5.006
+  Test-XML-0.08
+    pathname: S/SE/SEMANTICO/Test-XML-0.08.tar.gz
+    provides:
+      Test::XML 0.08
+      Test::XML::SAX 0.01
+      Test::XML::Twig 0.01
+      Test::XML::XPath 0.03
+      Test::XML::XPath::XML::LibXML undef
+      Test::XML::XPath::XML::XPath undef
+    requirements:
+      Test::More 0
+      XML::Parser 2.34
+      XML::SemanticDiff 0.95
+      perl v5.6.0
   Text-Brew-0.02
     pathname: K/KC/KCIVEY/Text-Brew-0.02.tar.gz
     provides:
@@ -2544,6 +2629,51 @@ DISTRIBUTIONS
       Fcntl 0
       URI 1.10
       perl 5.008001
+  XML-Generator-1.04
+    pathname: B/BH/BHOLZMAN/XML-Generator-1.04.tar.gz
+    provides:
+      XML::Generator 1.04
+      XML::Generator::DOM 0.2
+      XML::Generator::DOM::util 0.2
+      XML::Generator::cdata 1.04
+      XML::Generator::comment 1.04
+      XML::Generator::final 1.04
+      XML::Generator::overload 1.04
+      XML::Generator::pi 1.04
+      XML::Generator::pretty 1.04
+      XML::Generator::util 1.04
+    requirements:
+      ExtUtils::MakeMaker 0
+  XML-Parser-2.44
+    pathname: T/TO/TODDR/XML-Parser-2.44.tar.gz
+    provides:
+      XML::Parser 2.44
+      XML::Parser::Expat 2.44
+      XML::Parser::Style::Debug undef
+      XML::Parser::Style::Objects undef
+      XML::Parser::Style::Stream undef
+      XML::Parser::Style::Subs undef
+      XML::Parser::Style::Tree undef
+    requirements:
+      ExtUtils::MakeMaker 0
+      LWP::UserAgent 0
+      Test::More 0
+      perl 5.00405
+  XML-SemanticDiff-1.0005
+    pathname: S/SH/SHLOMIF/XML-SemanticDiff-1.0005.tar.gz
+    provides:
+      XML::SemanticDiff 1.0005
+      XML::SemanticDiff::BasicHandler 1.0005
+      XML::SemanticDiff::PathFinder 1.0005
+      XML::SemanticDiff::PathFinder::Obj 1.0005
+    requirements:
+      Digest::MD5 0
+      Encode 0
+      Module::Build 0.28
+      XML::Parser 0
+      perl 5.012
+      strict 0
+      warnings 0
   XML-Writer-0.625
     pathname: J/JO/JOSEPHW/XML-Writer-0.625.tar.gz
     provides:

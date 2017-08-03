@@ -7,3 +7,4 @@ requires 'DBIx::Class';
 requires 'DBIx::Class::DeploymentHandler';
 requires 'Tie::IxHash';
 requires 'Text::Markdown';
+requires 'TAP::Formatter::JUnit';
