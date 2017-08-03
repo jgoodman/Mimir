@@ -1,6 +1,6 @@
 % layout 'default';
 % title 'Mimir - Status';
-<h1><%= uc($name) %></h2>
+<h1><%= uc($name) %></h1>
 % foreach my $branch (@$branches) {
     <h2><a href="/branch/<%= $branch->{'branch_id'} %>"><%= $branch->{'title'} %></a></h2>
     <ul>
